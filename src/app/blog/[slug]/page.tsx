@@ -5,6 +5,7 @@ import { Post } from "@/app/interfaces/post"
 import Image from "next/image"
 import { notFound } from 'next/navigation'
 import { MDXRemote } from "next-mdx-remote/rsc";
+import Link from "next/link"
 
 /* Funcion para obtener el post */
 const getData = async (slug = "") => {
@@ -18,7 +19,7 @@ const getData = async (slug = "") => {
     }
   }
 
-  const {data} = await fetchApi(path, urlParamsObject)
+  const { data } = await fetchApi(path, urlParamsObject)
   return data[0]
 }
 
@@ -28,12 +29,12 @@ interface Props {
   }
 }
 
-const SlugPage = async({ params }: Props) => {
+const SlugPage = async ({ params }: Props) => {
 
   const { slug } = params
   const post: Post = await getData(slug)
 
-  if(!post) {
+  if (!post) {
     return notFound()
   }
 
@@ -41,8 +42,8 @@ const SlugPage = async({ params }: Props) => {
   const { url, width, height } = image.data.attributes.formats.medium;
 
   return (
-    <div className="space-y-8">
-      <PageHeader text={title}/>
+    <div className="space-y-8 my-5">
+      <PageHeader text={title} />
       <p className="text-gray-500 mb-2">{formatDate(createdAt)}</p>
       <Image
         className="h-auto rounded-lg"
@@ -58,8 +59,17 @@ const SlugPage = async({ params }: Props) => {
         {/* Utilizamos el componente MDXRemote para formatear el body de los post
         Esto quiere decir que aparezcan las letras en negrita, italic y subrayado
         Para eso tuvimos que haber instalado next-mdk-remote */}
-        <MDXRemote source={body}/>
+        <MDXRemote source={body} />
       </div>
+      <div className="flex">
+        <Link
+          href="/blog"
+          className="ml-auto px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Volver
+        </Link>
+      </div>
+
     </div>
   )
 }
